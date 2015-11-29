@@ -3,8 +3,9 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('etc/base.conf')
+config.read('etc/local.conf')
 
-DEBUG = bool(config.get('general', 'debug') == 'true')
+DEBUG = config.getboolean('general', 'debug')
 
 # development server
 HOST = config.get('server', 'host')
