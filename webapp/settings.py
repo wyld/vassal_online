@@ -24,3 +24,5 @@ CACHE_PORT = config.get('cache', 'port')
 TEMPLATE_DIR = config.get('paths', 'templates')
 STATIC_DIR = config.get('paths', 'static_dir')
 STATIC_URL = config.get('paths', 'static_url')
+
+MODULES_DIR = config.get('paths', 'modules_dir')

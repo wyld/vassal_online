@@ -20,6 +20,9 @@ class BaseView(object):
     def create_response(self, context):
         return aiohttp.web.Response(context)
 
+    async def get_context(self, requet):
+        raise NotImplemented()
+
 
 class TemplateResponseMixin(object):
     template = None

@@ -13,7 +13,14 @@
 
   	<body>
 	    <div class="container">
-	      	<h1>Hello!</h1>
+	      	<h1>Vassal Online</h1>
+            <form method="POST" action="/api/modules/import/" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="module">
+                    <p class="help-block">Upload vassal module to import it to database.</p>
+                </div>
+                <button type="submit" class="btn btn-default">Upload module</button>
+            </form>
 	    </div>
 
         <script src="/static/bundle.js"></script>

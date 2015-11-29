@@ -7,4 +7,5 @@ urls = (
 
 	('GET', '/api/games/', games.GamesList.as_view()),
 	('GET', '/api/modules/', modules.ModulesList.as_view()),
+    ('POST', '/api/modules/import/', modules.ModulesImport.as_view()),
 )
