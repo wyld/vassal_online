@@ -2,6 +2,8 @@ import base64
 import hashlib
 from lxml import etree
 import os
+import shutil
+import uuid
 import zipfile
 
 import settings
@@ -25,15 +27,18 @@ class ModuleParser(object):
                     build_file_content = zipped_module.read(BUILD_FILE_NAME)
                 except KeyError:
                     raise ValidationError('Provided file is not a valid module')
-                module_hash = base64.b32encode(hashlib.md5(build_file_content).digest()).decode('utf-8')
-                module_path = os.path.join(settings.MODULES_DIR, module_hash)
+                metadata['_id'] = module_hash = str(uuid.uuid5(
+                    uuid.NAMESPACE_DNS, build_file_content.decode('utf-8')))
+                temporary_module_path = module_path = os.path.join(
+                    settings.MODULES_DIR, module_hash)
 
-                if os.path.exists(module_path):
-                    raise ValidationError('Module is already uploaded')
+                while os.path.exists(temporary_module_path):
+                    temporary_module_path += '_'
 
-                os.makedirs(module_path)
+                os.makedirs(temporary_module_path)
                 for item in zipped_module.infolist():
-                    output_filename = os.path.join(module_path, item.filename)
+                    output_filename = os.path.join(
+                        temporary_module_path, item.filename)
                     output_dirname = os.path.dirname(output_filename)
                     if not os.path.exists(output_dirname):
                         os.makedirs(output_dirname)
@@ -48,6 +53,10 @@ class ModuleParser(object):
                     if item.filename == MODULE_DATA_FILE_NAME:
                         parser = ModuleDataFileParser(input_content)
                         metadata.update(parser.parse())
+
+                if temporary_module_path != module_path:
+                    shutil.rmtree(module_path)
+                    shutil.move(temporary_module_path, module_path)
         except zipfile.BadZipFile:
             raise ValidationError('Provided file is not a valid module')
 

@@ -25,4 +25,6 @@ class ModulesImport(ApiView):
                 module = parser.extract()
             except ValidationError as e:
                 return {'error': str(e)}
+
+            await modules.objects_replace(module)
         return {'object': module}
